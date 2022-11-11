@@ -1,0 +1,3 @@
+[submodule "/themes"] 
+  path = /tehemes 
+  url = git://github.com/tehlug/tehlug-Hugo-Theme.git
