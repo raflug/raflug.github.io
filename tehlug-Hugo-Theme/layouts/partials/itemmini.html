@@ -1,0 +1,66 @@
+<div class="post-summary">
+	<a class="title" href="{{ .RelPermalink }}">{{.Title}}</a>
+	<br>
+	<span class="description">
+		جلسه {{ partial "persianNumber.html" .Params.EventNumber }}
+	
+		{{ if isset .Params "eventdate" }}
+			در تاریخ <bdi>{{ partial "persianNumber.html" .Params.EventDate }}</bdi>
+		{{ end }}
+
+		{{ if (and (isset .Params "starttime") (isset .Params "endtime")) }}
+			از ساعت {{ partial "persianNumber.html" .Params.StartTime }}
+			تا {{ partial "persianNumber.html" .Params.EndTime }}
+		{{ end }}
+
+		{{ if isset .Params "locations"  }}
+			در {{ index .Params.Locations 0 }}
+		{{ end }}
+
+		برگزار میشود.
+		<br>
+		
+		{{ if ne .Type "page" }}
+			{{ if gt .Params.Speakers 0 }}
+				{{ $count := len .Params.Speakers }}
+				{{ if gt $count 1 }}
+					ارائه دهندگان:
+				{{ else }}
+					ارائه دهنده:
+				{{ end }}
+				{{ range $index, $element := .Params.Speakers }}
+					<a href="{{ "/speakers/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+					{{ if ne $index (sub $count 1) }}
+						،
+					{{ end }}
+
+				{{ end }}
+
+			{{ end }}
+
+			<br>
+
+		{{ end }}
+	
+		{{ if ne .Type "page" }}
+			{{ if gt .Params.Topics 0 }}
+				{{ $count := len .Params.Topics }}
+				{{ if gt $count 1 }}
+					موضوعات:
+				{{ else }}
+					موضوع:
+				{{ end }}
+				{{ range $index, $element := .Params.Topics }}
+					<a href="{{ "/topics/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+					{{ if ne $index (sub $count 1) }}
+						،
+					{{ end }}
+				
+				{{ end }}
+			
+			{{ end }}
+	
+		{{ end }}
+		
+	</span>
+</div>
