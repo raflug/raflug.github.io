@@ -1,4 +1,4 @@
-baseURL = "http://raflug.github.io/"
+baseURL = "https://raflug.github.io/"
 languageCode = "fa-ir"
 title = "رفلاگ"
 theme = "Tehlug-Hugo-Theme"
