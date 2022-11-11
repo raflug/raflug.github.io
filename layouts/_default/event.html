@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+{{ partial "header.html" . }}
+<body>
+	<div class="container wrapper post">
+		{{ partial "head.html" . }}
+
+		<div class="post-header">
+			<h1 class="title">{{ .Title }}</h1>
+		</div>
+
+		<div class="markdown">
+			{{ .Content }}
+		</div>
+
+		<div>
+			{{ if ne .Type "page" }}
+				{{ if gt .Params.Participants 0 }}
+					{{ $count := len .Params.Participants }}
+					شرکت کنندگان {{ partial "persianNumber.html" $count }} نفر:<br>
+
+					{{ range $index, $element :=  .Params.Participants }}
+						<a href="{{ "/participants/" | relLangURL }}{{ . | urlize }}">{{ . }}</a>
+						{{ if ne $index (sub $count 1) }}
+							،
+						{{ end }}
+					{{ end }}
+					<br>
+				{{ end }}
+			{{ end }}
+		</div>
+
+		{{ if .File.Dir }}
+			{{ if (fileExists (print "./static/events/images/" .Params.eventNumber)) }}
+				<br>
+				<a href="/events/{{ .Params.eventNumber }}/gallery/">تصاویر</a>
+				<br>
+			{{ end }}
+		{{ end }}
+
+		{{ if (isset .Params "registerlink") }}
+			<br>
+			<a href="{{ .Params.RegisterLink }}" target="_blank">ثبت‌نام رایگان</a>
+			<br>
+		{{ end }}
+
+		{{ if (isset .Params "eventdate") }}
+			<br>
+			زمان برگزاری: <bdi>{{ partial "persianNumber.html" .Params.EventDate }}</bdi>
+		{{ end }}
+	
+		{{ if (and (isset .Params "starttime") (isset .Params "endtime")) }}
+			از ساعت: {{ partial "persianNumber.html" .Params.StartTime }}
+			تا {{ partial "persianNumber.html" .Params.EndTime }}
+		{{ end }}
+
+		<br>
+
+		{{ if (isset .Params "address") }}
+			<br>
+			آدرس: {{ .Params.Address }}
+			<br>
+		{{ end }}
+
+		<div class="poster">
+			{{ if .File.Dir }}
+				{{ $basename := (print "/events/poster/" .Params.eventNumber "/") }}
+				{{ if (fileExists (print "./static" $basename)) }}
+					{{ range (readDir (print "./static" $basename )) }}
+						<a href="{{ $basename | relURL }}{{ .Name }}" target="_blank">
+							<img src="{{ $basename | relURL }}{{ .Name }}"/>
+							{{ index (split .Name ".") 0 }}
+						</a>
+				
+					{{ end }}
+					
+				{{ end }}
+			
+			{{ end }}
+		
+		</div>
+
+
+		{{ if (and (isset .Params "lat") (isset .Params "lng")) }}
+			<br>
+			<a href="geo:{{ .Params.Lat }},{{ .Params.Lng }}" target="_blank">باز کردن نقشه</a>
+			<br>
+
+			<iframe class="map" frameborder= 0
+				src="https://www.openstreetmap.org/export/embed.html?bbox={{ sub .Params.Lng .Site.Params.MapView }},{{sub .Params.Lat .Site.Params.MapView }},{{add .Params.Lng .Site.Params.MapView }},{{add .Params.Lat .Site.Params.MapView }}&layer=mapnik&marker={{ .Params.Lat }},{{ .Params.Lng }}">
+			</iframe>
+		{{ end }}
+
+		{{ if gt .Params.Locations 0 }}
+			<div class="post-tags">
+				<nav class="nav tags">
+					<ul class="flat">
+						<li><a href="/locations/{{ index .Params.Locations 0 | urlize}}">{{ index .Params.Locations 0 }}</a></li>
+					</ul>
+				</nav>		
+			</div>
+		{{ end }}
+
+		<div class="post-tags">
+			{{ if ne .Type "page" }}
+				{{ if gt .Params.Speakers 0 }}
+					<nav class="nav tags">
+						<ul class="flat">
+							{{ range .Params.Speakers }}
+								<li><a href="{{ "/speakers/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+							{{ end }}
+						</ul>
+					</nav>
+				{{ end }}
+			{{ end }}
+		</div>
+
+		<div class="post-tags">
+			{{ if ne .Type "page" }}
+				{{ if gt .Params.Topics 0 }}
+					<nav class="nav tags">
+						<ul class="flat">
+							{{ range .Params.Topics }}
+								<li><a href="{{ "/topics/" | relLangURL }}{{ . | urlize }}">{{ . }}</a></li>
+							{{ end }}
+						</ul>
+					</nav>
+				{{ end }}
+			{{ end }}
+		</div>
+	
+	</div>
+	{{ partial "footer.html" . }}
+</body>
+</html>
